@@ -3,7 +3,7 @@ import React from "react";
 import "./App.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-export default weather;
+
 import weather from "./app_component/weather.component";
 import Form from "./app_component/form.component";
 
@@ -72,7 +72,7 @@ getWeather = async (e) =>{
   e.preventDefault();
 
   const city = e.target.elements.city.value;
-  const country = e.target-elements.country.value;
+  const country = e.target.elements.country.value;
 
   if(city&&country){
     const api_call = await fetch("http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_key}");
@@ -83,7 +83,8 @@ getWeather = async (e) =>{
 
 
   this.state({
-    city:"${response.name}, ${response.sys.country}",
+    city:response.name,
+    country:response.sys.country,
     celsius:this.calCelsius(response.main.temp),
     temp_max:this.calCelsius(response.main.temp_max),
     temp_min:this.calCelsius(response.main.temp_min),
