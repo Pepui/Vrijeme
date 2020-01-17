@@ -8,7 +8,7 @@ import weather from "./app_component/weather.component";
 import Form from "./app_component/form.component";
 
 //api call api.openweathermap.org/data/2.5/weather?q=London,uk
-const API_key = " "
+const API_key = "36e8216364bf200de53651d7e0237822"
 
 class App extends React.Component{
   constructor(){
@@ -107,7 +107,8 @@ this.getWeatherIcon(this.weatherIcon,response.weather[0].id);
     return (
       <div className="App">
       <Form loadweather={this.getWeather} error={this.state.error}/>
-      <weather city={this.state.city} 
+      <weather 
+       city={this.state.city} 
        country={this.state.country}
        temp_celsius={this.state.celsius}
        temp_max={this.state.max}
