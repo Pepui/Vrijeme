@@ -7,8 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import weather from "./app_component/weather.component";
 import Form from "./app_component/form.component";
 
-//api call api.openweathermap.org/data/2.5/weather?q=London,uk
-const API_key = "36e8216364bf200de53651d7e0237822"
+//api call http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_key}
+const API_key = "7f21d2992a71733eea1a4451e2d747ff";
 
 class App extends React.Component{
   constructor(){
@@ -25,7 +25,7 @@ class App extends React.Component{
     error:false
     };
     
-    
+    //ikone na temelju vremenske prognoze
     this.weatherIcon={
       Thunderstorm:"wi-thunderstorm",
       Drizzle:"wi-sleet",
@@ -36,11 +36,13 @@ class App extends React.Component{
       Clouds:"wi-day-fog"
     };
   }
-
+// pretvara kelvine u celziuse  
   calCelsius(temp){ 
     let cell = Math.floor(temp - 273.15);
     return cell;
   }
+
+  // provjera podataka i stavlja odgovarajuću ikonu
 getWeatherIcon(icons,rangeId){
   switch(true){
 case rangeId >=200 && rangeId >=232:
@@ -58,7 +60,7 @@ break;
 case rangeId >=701 && rangeId >=781:
 this.setState({icon:this.weatherIcon.Atmosphere})
 break;
-case rangeId == 800:
+case rangeId === 800:
 this.setState({icon:this.weatherIcon.Clear})
 break;
 case rangeId >=801 && rangeId >=804:
@@ -68,22 +70,27 @@ default:
   this.setState({icon:this.weatherIcon.Clouds})
   }
 }
+
+//event handler za button u form.componentu
 getWeather = async (e) =>{
   e.preventDefault();
 
-  const city = e.target.elements.city.value;
+  //vrijednosti polja unosa
   const country = e.target.elements.country.value;
+  const city = e.target.elements.city.value;
+  
 
-  if(city&&country){
-    const api_call = await fetch("http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_key}");
-
+  if(country && city){
+    const api_call = await fetch(
+      "http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${Api_Key}"
+    );
+    
   const response = await api_call.json();
 
-  console.log(response);
-
-
+  
+//vraća vrijednost API
   this.state({
-    city:response.name,
+    city:"${response.name}, ${response.sys.country}",
     country:response.sys.country,
     celsius:this.calCelsius(response.main.temp),
     temp_max:this.calCelsius(response.main.temp_max),
@@ -94,8 +101,12 @@ getWeather = async (e) =>{
   });
 
 this.getWeatherIcon(this.weatherIcon,response.weather[0].id);
+
+console.log(response);
   }else{
-    this.setState({error:true});
+    this.setState({
+      error:true
+    });
   }
 
 
